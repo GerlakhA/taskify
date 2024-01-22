@@ -24,6 +24,7 @@ const Header = ({ data }: IHeader) => {
 	const { execute: executeUpdateCard } = useAction(UpdateCard, {
 		onSuccess: data => {
 			client.invalidateQueries({ queryKey: ['card', data.id] })
+			client.invalidateQueries({ queryKey: ['card-logs', data.id] })
 			toast.success(`Renamed to ${data.title}`)
 			setTitle(data.title)
 		},
