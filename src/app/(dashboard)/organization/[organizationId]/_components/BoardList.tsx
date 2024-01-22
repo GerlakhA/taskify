@@ -1,7 +1,9 @@
 import { Hint } from '@/components/Hint'
 import { FormPopover } from '@/components/form/Form-Popover'
 import { Skeleton } from '@/components/ui/skeleton'
+import { MAX_FREE_BOARDS } from '@/constants/boards'
 import { dbPrisma } from '@/lib/db'
+import { getAvailableCount } from '@/lib/org-limit'
 import { auth } from '@clerk/nextjs'
 import { HelpCircle, User2 } from 'lucide-react'
 import Link from 'next/link'
@@ -11,6 +13,8 @@ const BoardList = async () => {
 	const { orgId } = auth()
 
 	if (!orgId) return redirect('/select-org')
+
+	const availableCount = await getAvailableCount()
 
 	const boards = await dbPrisma.board.findMany({
 		where: {
@@ -47,7 +51,7 @@ const BoardList = async () => {
           w-full rounded-sm flex-col gap-y-1 hover:opacity-75 transition bg-muted'
 					>
 						<p>Create new board</p>
-						<span>5 remaining</span>
+						<span>{`${MAX_FREE_BOARDS - availableCount} remaining`}</span>
 						<Hint
 							sideOffset={35}
 							description='Free Workspaces can have up to 5 open boards. For unlimited boards upgrade this workspace.'

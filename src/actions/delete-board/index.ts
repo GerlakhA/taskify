@@ -1,15 +1,16 @@
 'use server'
 
+import { createAuditLog } from '@/lib/create-audit-log'
 import { createSafeAction } from '@/lib/create-safe-action'
 import { dbPrisma } from '@/lib/db'
+import { decreaseAvailableCount } from '@/lib/org-limit'
 import { auth } from '@clerk/nextjs'
+import { ACTION, ENTITY_TYPE } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { TypeInput } from '../delete-board/types'
 import { deleteBoard } from './schema'
 import { ReturnType } from './types'
-import { createAuditLog } from '@/lib/create-audit-log'
-import { ACTION, ENTITY_TYPE } from '@prisma/client'
 
 const handler = async (data: TypeInput): Promise<ReturnType> => {
 	const { userId, orgId } = auth()
@@ -30,6 +31,8 @@ const handler = async (data: TypeInput): Promise<ReturnType> => {
 				orgId,
 			},
 		})
+
+		await decreaseAvailableCount()
 
 		await createAuditLog({
 			entityId: board.id,

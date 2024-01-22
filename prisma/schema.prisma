@@ -88,3 +88,25 @@ model AuditLog {
 
   @@map("auditlog")
 }
+
+model OrgLimit {
+  id    String @id @default(uuid())
+  orgId String @unique
+  count Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("org_limit")
+}
+
+model OrgSubscription {
+  id                     String    @id @default(uuid())
+  orgId                  String    @unique
+  stripeCustomerId       String?   @unique @map("stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
+  stripePriceId          String?   @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
+
+  @@map("org_subscription")
+}

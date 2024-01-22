@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 
-import { defaultImages } from '@/config/constants/defaultImages'
+import { defaultImages } from '@/constants/defaultImages'
 import { unsplash } from '@/lib/unsplash'
 import { cn } from '@/lib/utils'
 import { FormErrors } from './Form-Errors'
